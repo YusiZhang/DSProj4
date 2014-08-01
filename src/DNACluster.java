@@ -1,15 +1,59 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
-// import mpi.*;
+import mpi.*;
 
+
+//tag 99 : send centroids
 public class DNACluster {
-	
+	public String outFile;
+	public int numCluster;
+	public ArrayList<String>dnaList;
 
-	public DNACluster(int numCluster, String outFile, ArrayList<String> dnaList){
+	public DNACluster(int numCluster, String outFile, ArrayList<String> dnaList) throws MPIException{
+		this.numCluster = numCluster;
+		this.outFile = outFile;
+		this.dnaList = dnaList;
+
+		//step 1 init args
+		int myRank = MPI.COMM_WORLD.Rank();
+		int size = MPI.COMM_WORLD.Size();
+
+		//slave process
+		if (myRank != 0) {
+			//step 1 get centroids from master
+			String [] centroids = new String[numCluster];
+			MPI.COMM_WORLD.Recv(centroids, 0, numCentroids, MPI.OBJECT, 0, 0);
+		}
+
+		//master process
+		else {
+			//step1 select init centroids randomly from dnaList
+			ArrayList<Integer> randomPool = generateRandom(numCluster, dnaList.size());
+			String [] centroids = new String[numCluster];
+			int n = 0;
+			for(int i : randomPool) {
+				if(n < numCluster){
+					centroids[n] = dnaList.get(i).toString();
+					n++;
+				} else {
+					break;
+				}
+			}
+
+			//step 2 send centriod to every slave
+			for (int slaveRank = 1; slaveRank < size ; slaveRank++) {
+				MPI.COMM_WORLD.Send(centroids, 0, p.length, MPI.OBJECT, slaveRank, 99);
+			}
+
+		}
+
 		
 	}
 	
@@ -119,8 +163,10 @@ public class DNACluster {
 				resultCluster2[i] = cluster;
 				resultDif2[i] = dif;
 			}
+			
 			System.out.println(Arrays.toString(resultDif2));
 			System.out.println(Arrays.toString(resultCluster2));
+			writeFile(dnaList, resultCluster2, outFile);
 
 			
 		} catch (Exception e) {
@@ -208,5 +254,22 @@ public class DNACluster {
 		return new String(newCentroid);
 	} 
 	
+	/*
+	 * Write results into csv files
+	 */
+	private static void writeFile(ArrayList<String> dnaList, int[] clusters,String outFile){
+		try {
+			PrintWriter writer = new PrintWriter(new File(outFile));
+			System.out.println(outFile);
+			for(int i = 0; i < dnaList.size(); i++) {
+				writer.println(dnaList.get(i) + "," + clusters[i]);
+				System.out.println(dnaList.get(i) + "," + clusters[i]);
+				writer.flush();
+			}
+			writer.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 	
 }
