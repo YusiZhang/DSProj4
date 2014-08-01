@@ -7,6 +7,8 @@ import java.util.Random;
 // import mpi.*;
 
 public class DNACluster {
+	
+
 	public DNACluster(int numCluster, String outFile, ArrayList<String> dnaList){
 		
 	}
@@ -98,6 +100,7 @@ public class DNACluster {
 			System.out.println(Arrays.toString(newCentroids));
 
 			//step 4 recalcualte cluster
+			//can be while loop...
 			int [] resultCluster2 = new int[dnaList.size()];
 			int [] resultDif2 = new int[dnaList.size()];
 			for (int i = 0; i < dnaList.size(); i++) {
@@ -126,9 +129,10 @@ public class DNACluster {
 	}
 	
 	
-	
-	//Generate numCluster ints within range of 0 to listSize
-	//return list
+	/*
+	 * Generate numCluster ints within range of 0 to listSize
+	 * @return list
+	 */
 	public static ArrayList<Integer> generateRandom(int numCluster, int listSize){
 		ArrayList randomPool = new ArrayList<Integer>();
 		Random r = new Random();
@@ -142,7 +146,10 @@ public class DNACluster {
 		return randomPool;
 	}
 	
-	//calculate dif
+	/*
+	 * calculate dif
+	 * @return dif between src strand and centroid strand
+	 */
 	public static int calDif (String src, String dest) {
 		int dif = 0;
 		char [] str1 = src.toCharArray();
@@ -157,7 +164,10 @@ public class DNACluster {
 		return dif;
 	}
 
-	//re-calculate centroids
+	/*
+	 * re-calculate centroids
+	 * @return String of new centroid
+	 */
 	public static String reCal(ArrayList<String> strands) {
 		StringBuilder newCentroid = new StringBuilder();
 		int dnaLength = strands.get(0).length();
