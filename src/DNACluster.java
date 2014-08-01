@@ -29,7 +29,32 @@ public class DNACluster {
 		if (myRank != 0) {
 			//step 1 get centroids from master
 			String [] centroids = new String[numCluster];
-			MPI.COMM_WORLD.Recv(centroids, 0, numCentroids, MPI.OBJECT, 0, 0);
+			MPI.COMM_WORLD.Recv(centroids, 0, numCluster, MPI.OBJECT, 0, 99);
+			
+			//step 2 calculate dif of its part
+			int numStrandsSlave = dnaList.size() / numCluster;
+			int [] resultCluster = new int[dnaList.size()];
+			int [] resultDif = new int[dnaList.size()];
+			for (int i = 0; i < numStrandsSlave; i++) {
+				int dif = Integer.MAX_VALUE;
+				int cluster = -1;
+				for (int j = 0; j < numCluster; j++) {
+					//compare strand with centroid one by one
+					int tempdif = calDif(dnaList.get((myRank - 1) * numStrandsSlave + i),centroids[j]);
+					if(tempdif < dif ){
+						dif = tempdif;
+						cluster = j;
+					}else {
+						continue;
+					}
+				}
+				resultCluster[i] = cluster;
+				resultDif[i] = dif;
+			}
+			System.out.println(Arrays.toString(resultDif));
+			System.out.println(Arrays.toString(resultCluster));
+			
+			
 		}
 
 		//master process
@@ -49,8 +74,12 @@ public class DNACluster {
 
 			//step 2 send centriod to every slave
 			for (int slaveRank = 1; slaveRank < size ; slaveRank++) {
-				MPI.COMM_WORLD.Send(centroids, 0, p.length, MPI.OBJECT, slaveRank, 99);
+				MPI.COMM_WORLD.Send(centroids, 0, numCluster, MPI.OBJECT, slaveRank, 99);
 			}
+			
+			//step 3 send calculate new centroids to slaves
+			
+			//step 4 
 
 		}
 
