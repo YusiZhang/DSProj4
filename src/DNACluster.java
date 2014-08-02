@@ -62,7 +62,7 @@ public class DNACluster {
 				map.put(i,new ArrayList<String>());
 			}
 
-			for (int i = 0; i < dnaList.size(); i++) {
+			for (int i = 0; i < numStrandsSlave; i++) {
 				map.get(resultCluster[i]).add(dnaList.get((myRank - 1) * numStrandsSlave + i));
 			}//now we have arraylists of each cluster
 
