@@ -69,9 +69,37 @@ public class DNACluster {
 			
 			//step 4 
 			int dnaLength = dnaList.get(0).length();
-			int [][][] sum = new int [numCluster][dnaLength][1];
-			int [][][] newSum = new int [numCluster][dnaLength][1];
-			
+			int [][][] sum = new int [numCluster][dnaLength][4];
+			int [][][] newSum = new int [numCluster][dnaLength][4];
+			for (int i = 0; i < numCluster; i++) {
+				for (int j = 0 ; j < dnaLength; j++) {
+					int [] frequence = new int[4];
+					for (String strand : map.get(i)) {
+						char cur = strand.charAt(j);
+						switch (cur) {
+							case 'A' : 
+								frequence[0]++;
+								break;
+							case 'C' :
+								frequence[1]++;
+								break;
+							case 'T' : 
+								frequence[2]++;
+								break;
+							case 'G' : 
+								frequence[3]++;
+								break;
+						}
+					}
+					
+					int[] xSum = frequence ,xSumNew = new int[4];
+					MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
+					System.out.println(Arrays.toString(xSumNew));
+					for (int k = 0; k < 4; k++ ) {
+						sum[i][j][k] = xSum[k]; 	
+					} 
+				}
+			}
 			
 		}
 
