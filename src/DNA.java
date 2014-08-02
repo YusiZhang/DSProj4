@@ -26,7 +26,7 @@ public class DNA {
 		this.numCluster = numCluster;
 		this.outFile = outFile;
 		this.dnaList = dnaList;
-		this.numInter = 3;
+		this.numInter = 2;
 		this.centroids = new String[numCluster];
 		this.dnaLength = dnaList.get(0).length();
 		this.sum = new int [numCluster][dnaLength][4]; //cluster,dnalength,4bases
@@ -49,6 +49,7 @@ public class DNA {
 				}
 				//send centriod to every slave
 				for (int slaveRank = 1; slaveRank < size ; slaveRank++) {
+					System.out.println("Send centroids " + Arrays.toString(centroids));
 					MPI.COMM_WORLD.Send(centroids, 0, numCluster, MPI.OBJECT, slaveRank, 99);
 				}
 			}
@@ -114,7 +115,8 @@ public class DNA {
 			for(int i = 0 ; i < tempClusters.length;i++){
 				if(tempClusters[i]!=-1) clusters[i] = tempClusters[i];
 			}
-			System.out.println("receive clusters" + Arrays.toString(tempClusters)+ "from " + slaveRank);
+			//testing...
+//			System.out.println("receive clusters" + Arrays.toString(tempClusters)+ "from " + slaveRank);
 		}
 		return clusters;
 	}
