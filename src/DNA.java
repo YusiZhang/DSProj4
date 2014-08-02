@@ -35,9 +35,9 @@ public class DNA {
 		
 		
 		
-		myRank = MPI.COMM_WORLD.Rank();
-		size = MPI.COMM_WORLD.Size();
-		numStrandsSlave = dnaList.size() / (size -1);
+		this.myRank = MPI.COMM_WORLD.Rank();
+		this.size = MPI.COMM_WORLD.Size();
+		this.numStrandsSlave = dnaList.size() / (size -1);
 		
 		System.out.println("Rank : " + myRank + "is working...");
 		for(int start = 0; start <numInter; start++){
@@ -62,12 +62,12 @@ public class DNA {
 			
 			//this is where all should work the same way...
 			//all reduce
-			
+			System.out.println("Start all reduce!!!  " + myRank);
 			for (int i = 0; i < numCluster; i++) {
 				for (int j = 0 ; j < dnaLength; j++) {
 					int [] xSum = new int[4], xSumNew = new int[4];
 					xSum = sum[i][j];
-					System.out.println("Start all reduce!!!  " + myRank);
+					
 					MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
 					sum[i][j] = xSumNew;
 					//testing...
