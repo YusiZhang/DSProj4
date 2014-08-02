@@ -24,10 +24,10 @@ public class DNACluster {
 		//step 1 init args
 		int myRank = MPI.COMM_WORLD.Rank();
 		int size = MPI.COMM_WORLD.Size();
-
+		System.out.println("rank: " + myRank + "is working...");
 		//slave process
 		if (myRank != 0) {
-			System.out.println("rank: " + myRank);
+			
 			//step 1 get centroids from master
 			String [] centroids = new String[numCluster];
 			MPI.COMM_WORLD.Recv(centroids, 0, numCluster, MPI.OBJECT, 0, 99);
