@@ -37,7 +37,7 @@ public class MPIHello {
 	
 		}
 		
-		int[] xSum = { 1, 2, 3 }, xSumNew = new int[3];
+		int[][] xSum = {{ 1, 2, 3 },{4,5,6}} ,xSumNew = new int[1][3];
 		MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
 		System.out.println(Arrays.toString(xSumNew));
 		
