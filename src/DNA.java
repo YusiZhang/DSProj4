@@ -199,7 +199,7 @@ public class DNA {
 						sum[count][j][k] = frequence[k]; 	
 					} 
 					//testing...
-					System.out.println("Slave "+myRank+" frequence : " + Arrays.toString(frequence));
+//					System.out.println("Slave "+myRank+" frequence : " + Arrays.toString(frequence));
 				}
 			}
 			
