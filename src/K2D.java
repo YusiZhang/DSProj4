@@ -106,7 +106,7 @@ public class K2D {
 		} else {
 			int clusters [] = glue();
 			System.out.println("final clusters are : "+Arrays.toString(clusters));
-//			writeFile(dataset, clusters, outFile);
+			writeFile(dataset, clusters, outFile);
 		}
 		
 	}
@@ -116,7 +116,7 @@ public class K2D {
 			PrintWriter writer = new PrintWriter(new File(outFile));
 			System.out.println(outFile);
 			for(int i = 0; i < dataset.size(); i++) {
-				writer.println(dataset.get(i) + "," + clusters[i]);
+				writer.println(dataset.get(i).getX() + ","+dataset.get(i).getY() + "," + clusters[i]);
 				System.out.println(dataset.get(i) + "," + clusters[i]);
 				writer.flush();
 			}
