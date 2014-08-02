@@ -41,7 +41,7 @@ public class K2D {
 		this.newClusterSize  = new int[numOfClusters];
 		this.pointsToCentroids = new int[dataset.size() / size];
 		this.pointsToIndex = new int[dataset.size() / size];
-		
+		this.dataset = dataset;
 		
 		
 		
