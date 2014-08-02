@@ -48,11 +48,29 @@ public class DNACluster {
 						continue;
 					}
 				}
-				resultCluster[i] = cluster;
-				resultDif[i] = dif;
+				resultCluster[(myRank - 1) * numStrandsSlave + i] = cluster;
+				resultDif[(myRank - 1) * numStrandsSlave + i] = dif;
 			}
 			System.out.println(Arrays.toString(resultDif));
 			System.out.println(Arrays.toString(resultCluster));
+			
+			//step 3 
+			String[] tempCluster = new String[dnaList.size()];
+			HashMap<Integer,ArrayList<String>> map = new HashMap<Integer,ArrayList<String>>();
+			
+			for (int i = 0; i < numCluster; i++) {
+				map.put(i,new ArrayList<String>());
+			}
+
+			for (int i = 0; i < dnaList.size(); i++) {
+				map.get(resultCluster[i]).add(dnaList.get((myRank - 1) * numStrandsSlave + i));
+			}//now we have arraylists of each cluster
+
+			
+			//step 4 
+			int dnaLength = dnaList.get(0).length();
+			int [][][] sum = new int [numCluster][dnaLength][1];
+			int [][][] newSum = new int [numCluster][dnaLength][1];
 			
 			
 		}

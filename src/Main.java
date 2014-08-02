@@ -9,6 +9,7 @@ public class Main {
 		int numClusters = 3;
 		
 //		int numClusters = Integer.parseInt(args[0]);
+
 		String outFile = "/afs/andrew.cmu.edu/usr22/yusiz/git/Proj4/output/out.csv";
 		String inFile = "/afs/andrew.cmu.edu/usr22/yusiz/git/Proj4/input/dna.csv";
 		ArrayList<String> dnaList = new ArrayList<String>();
