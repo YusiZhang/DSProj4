@@ -256,11 +256,11 @@ public class DNACluster {
 //			System.out.println(Arrays.toString(xSumNew));
 			
 			//test...
-			for (int i = 0; i < numCluster; i++) {
-				for (int j = 0 ; j < dnaLength; j++) {
-					System.out.println(Arrays.toString(sum[i][j]));
-				}
-			}
+//			for (int i = 0; i < numCluster; i++) {
+//				for (int j = 0 ; j < dnaLength; j++) {
+//					System.out.println(Arrays.toString(sum[i][j]));
+//				}
+//			}
 			//step 3  calculate  centroids and send to slaves
 			
 			for(int cluster = 0; cluster < numCluster; cluster++) {
