@@ -129,7 +129,7 @@ public class DNACluster {
 			}
 			System.out.println(Arrays.toString(xSum));
 			MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
-			sum[0][0] = xSum;
+			sum[0][0] = xSumNew;
 			System.out.println(Arrays.toString(sum[0][0]));
 			
 			//test...
@@ -162,6 +162,11 @@ public class DNACluster {
 				MPI.COMM_WORLD.Send(centroids, 0, numCluster, MPI.OBJECT, slaveRank, 99);
 			}
 			
+			//all reduce...
+			System.out.println("Start all reduce!!!");
+			int [] xSum = new int[4], xSumNew = new int[4];
+			MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
+			System.out.println(Arrays.toString(xSumNew));
 			//step 3 send calculate new centroids to slaves
 			
 			//step 4 
