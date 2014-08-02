@@ -35,6 +35,8 @@ public class DNACluster {
 			//step 1 get centroids from master
 			String [] centroids = new String[numCluster];
 			MPI.COMM_WORLD.Recv(centroids, 0, numCluster, MPI.OBJECT, 0, 99);
+			System.out.println("Slave " + myRank + "gets centroids: ");
+			System.out.println(Arrays.toString(centroids));
 			
 			//step 2 calculate dif of its part
 			int numStrandsSlave = dnaList.size() / (size -1);
@@ -56,7 +58,8 @@ public class DNACluster {
 				resultCluster[(myRank - 1) * numStrandsSlave + i] = cluster;
 				resultDif[(myRank - 1) * numStrandsSlave + i] = dif;
 			}
-			System.out.println(Arrays.toString(resultDif));
+//			System.out.println(Arrays.toString(resultDif));
+			System.out.println("Slave " + myRank +"clusters: ");
 			System.out.println(Arrays.toString(resultCluster));
 			
 			//step 3 
@@ -97,12 +100,12 @@ public class DNACluster {
 						}
 					}
 					
-					// int[] xSum = frequence ,xSumNew = new int[4];
-					// MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
-//					System.out.println(Arrays.toString(xSumNew));
+					
 					for (int k = 0; k < 4; k++ ) {
 						sum[i][j][k] = frequence[k]; 	
 					} 
+					//testing...
+					System.out.println("Slave "+myRank+" frequence : " + Arrays.toString(frequence));
 				}
 			}
 			
@@ -123,6 +126,8 @@ public class DNACluster {
 					xSum = sum[i][j];
 					MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
 					sum[i][j] = xSum;
+					//testing...
+					System.out.println("Slave " + myRank + "xSum " + Arrays.toString(sum[i][j]));
 				}
 			}
 			
@@ -253,6 +258,8 @@ public class DNACluster {
 					xSum = sum[i][j];
 					MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
 					sum[i][j] = xSum;
+					//testing...
+					System.out.println("Master xSum" + Arrays.toString(sum[i][j]) );
 				}
 			}
 //			int [] xSum = new int[4], xSumNew = new int[4];
@@ -285,6 +292,8 @@ public class DNACluster {
 				}
 				centroids[cluster] = new String(newCentroid);
 			}
+			//testing....
+			System.out.println("Master cal new centroids " + Arrays.toString(centroids));
 			
 			//send again.... really need a loop...
 			for (int slaveRank = 1; slaveRank < size ; slaveRank++) {
