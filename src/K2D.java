@@ -124,14 +124,15 @@ public class K2D {
 		double[] xSum = new double[numOfClusters];
 		double[] ySum = new double[numOfClusters];
 
+		System.out.println("pointstocentroids: "+Arrays.toString(pointsToCentroids));
 		for(int j = 0; j < pointsToIndex.length; j++) {
-			System.out.print(j + "/t");
+			System.out.print("j: "+j + "\t");
 			
 			int index = pointsToCentroids[j];
-			System.out.print(index + "/t");
+			System.out.print("index: "+index + "\t");
 			xSum[index] += dataset.get(pointsToIndex[j]).getX();
 			ySum[index] += dataset.get(pointsToIndex[j]).getY();
-			System.out.println(pointsToIndex[j]);
+			System.out.println("pointstoindex: "+pointsToIndex[j]);
 			
 			clusterSize[index]++;
 		}
