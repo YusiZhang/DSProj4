@@ -17,7 +17,15 @@ public class Main {
 		
 		dnaList = reader.read();
 //		new DNACluster(numClusters, outFile, dnaList);
-		new DNA(numClusters, outFile, dnaList);	
+//		new DNA(numClusters, outFile, dnaList);
+		
+		
+		String outFile2 = "/afs/andrew.cmu.edu/usr22/yusiz/git/Proj4/output/point_out.csv";
+		String inFile2 = "/afs/andrew.cmu.edu/usr22/yusiz/git/Proj4/input/point.csv";
+		ArrayList<Point> pointList = new ArrayList<Point>();
+		ReadCSV reader2 = new ReadCSV(inFile2, "point");
+		pointList = reader2.read();
+		new K2D(pointList, outFile2, numClusters);
 			
 	
 		
