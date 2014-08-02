@@ -99,7 +99,7 @@ public class K2D {
 		
 		System.out.println("Program " + myRank + "ends");
 		if(myRank != 0) {
-			MPI.COMM_WORLD.Send(pointsToCentroids, 0, pointsToCentroids.length, MPI.OBJECT, 0, 99);
+			MPI.COMM_WORLD.Send(pointsToCentroids, 0, pointsToCentroids.length, MPI.INT, 0, 99);
 		} else {
 			int clusters [] = glue();
 			System.out.println(Arrays.toString(clusters));
