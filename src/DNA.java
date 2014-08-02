@@ -45,6 +45,7 @@ public class DNA {
 			if(myRank == 0) {
 				if(start==0) centroids = initCentroids(); //first time
 				else {//master cal new centroids
+					System.out.println("round " + start);
 					centroids = recalCen();
 				}
 				//send centriod to every slave
@@ -71,14 +72,14 @@ public class DNA {
 					sum[i][j] = xSumNew;
 					//testing...
 					System.out.println("Rank " + myRank + " sum[i][j] " + Arrays.toString(sum[i][j]));
-					System.out.println("Rank " + myRank + " xSumNew " + Arrays.toString(xSumNew));
+//					System.out.println("Rank " + myRank + " xSumNew " + Arrays.toString(xSumNew));
 				}
 			}
 			
 			//abort condition..
-			if(false) {
-				break;
-			}
+//			if(false) {
+//				break;
+//			}
 		}
 		//assume finish...
 		if(myRank != 0){ //slave send results to master
