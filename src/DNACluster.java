@@ -4,13 +4,17 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 
 import mpi.*;
 
 //tag 99 : send centroids
+//tag 1 : send new centroids
+//tag0 : final result
 public class DNACluster {
 	public String outFile;
 	public int numCluster;
@@ -122,13 +126,7 @@ public class DNACluster {
 				}
 			}
 			
-			
-//			int [] xSum = new int[4], xSumNew = new int[4];
-//			xSum = sum[0][0];
-////			System.out.println(Arrays.toString(xSum));
-//			MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
-//			sum[0][0] = xSumNew;
-//			System.out.println(Arrays.toString(sum[0][0]));
+
 			
 			//test...
 			for (int i = 0; i < numCluster; i++) {
@@ -137,6 +135,85 @@ public class DNACluster {
 				}
 			}
 			
+			//step 6 receive for recalculate
+			MPI.COMM_WORLD.Recv(centroids, 0, numCluster, MPI.OBJECT, 0, 1);
+			//step 7 recalculate
+			resultCluster = new int[dnaList.size()];
+			resultDif = new int[dnaList.size()];
+			//init data
+			for(int i = 0 ;i < dnaList.size();i++){
+				resultCluster[i] = -1;
+			}
+			
+			for (int i = 0; i < numStrandsSlave; i++) {
+				int dif = Integer.MAX_VALUE;
+				int cluster = -1;
+				for (int j = 0; j < numCluster; j++) {
+					//compare strand with centroid one by one
+					int tempdif = calDif(dnaList.get((myRank - 1) * numStrandsSlave + i),centroids[j]);
+					if(tempdif < dif ){
+						dif = tempdif;
+						cluster = j;
+					}else {
+						continue;
+					}
+				}
+				resultCluster[(myRank - 1) * numStrandsSlave + i] = cluster;
+				resultDif[(myRank - 1) * numStrandsSlave + i] = dif;
+			}
+			//step 8 recalculating...
+			tempCluster = new String[dnaList.size()];
+			map = new HashMap<Integer,ArrayList<String>>();
+			
+			for (int i = 0; i < numCluster; i++) {
+				map.put(i,new ArrayList<String>());
+			}
+
+			for (int i = 0; i < numStrandsSlave; i++) {
+				map.get(resultCluster[i]).add(dnaList.get((myRank - 1) * numStrandsSlave + i));
+			}//now we have arraylists of each cluster
+			
+			//continue...
+			for (int i = 0; i < numCluster; i++) {
+				for (int j = 0 ; j < dnaLength; j++) {
+					int [] frequence = new int[4];
+					for (String strand : map.get(i)) {
+						char cur = strand.charAt(j);
+						switch (cur) {
+							case 'A' : 
+								frequence[0]++;
+								break;
+							case 'C' :
+								frequence[1]++;
+								break;
+							case 'T' : 
+								frequence[2]++;
+								break;
+							case 'G' : 
+								frequence[3]++;
+								break;
+						}
+					}
+					
+					for (int k = 0; k < 4; k++ ) {
+						sum[i][j][k] = frequence[k]; 	
+					} 
+				}
+			}
+			//step 9 all reduce last digit for AGCT again...
+			System.out.println("Start all reduce!!!  " + myRank);
+			for (int i = 0; i < numCluster; i++) {
+				for (int j = 0 ; j < dnaLength; j++) {
+					int [] xSum = new int[4], xSumNew = new int[4];
+					xSum = sum[i][j];
+					MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
+					sum[i][j] = xSum;
+				}
+			}
+			
+			//for last time send final result
+//			MPI.COMM_WORLD.Recv(DNA2clusterSlave, 0, numDNAStrandsSlave, MPI.INT,MPI.ANY_SOURCE, 100);
+			MPI.COMM_WORLD.Send(resultCluster, 0, resultCluster.length, MPI.OBJECT, 0, 0);
 			
 		}
 
@@ -182,9 +259,46 @@ public class DNACluster {
 					System.out.println(Arrays.toString(sum[i][j]));
 				}
 			}
-			//step 3 send calculate new centroids to slaves
+			//step 3  calculate  centroids and send to slaves
 			
-			//step 4 
+			for(int cluster = 0; cluster < numCluster; cluster++) {
+				StringBuilder newCentroid = new StringBuilder();
+				int index;
+				char [] bases = {'A','C','T','G'};
+				for(int pos = 0; pos < dnaLength; pos++){
+					List list = Arrays.asList(sum[cluster][pos]);
+					index = Collections.max(list);
+					newCentroid.append(bases[index]);
+				}
+				centroids[cluster] = new String(newCentroid);
+			}
+			
+			//send again.... really need a loop...
+			for (int slaveRank = 1; slaveRank < size ; slaveRank++) {
+				MPI.COMM_WORLD.Send(centroids, 0, numCluster, MPI.OBJECT, slaveRank, 1);
+			}
+			
+			//get all reduce
+			System.out.println("Start all reduce!!!  " + myRank);
+			for (int i = 0; i < numCluster; i++) {
+				for (int j = 0 ; j < dnaLength; j++) {
+					int [] xSum = new int[4], xSumNew = new int[4];
+					xSum = sum[i][j];
+					MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
+					sum[i][j] = xSum;
+				}
+			}
+			
+			//for last time...
+			int [] clusters = new int[dnaList.size()];
+			for(int slaveRank = 1; slaveRank < size; slaveRank++){
+				int[] tempClusters = new int[dnaList.size()];
+				MPI.COMM_WORLD.Recv(tempClusters, 0, tempClusters.length, MPI.INT,MPI.ANY_SOURCE, 0);
+				for(int i = 0 ; i < tempClusters.length;i++){
+					if(tempClusters[i]!=-1) clusters[i] = tempClusters[i];
+				}
+			}
+			writeFile(dnaList, clusters, outFile);
 
 		}
 
