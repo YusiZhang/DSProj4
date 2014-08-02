@@ -192,7 +192,7 @@ public class DNA {
 					
 					
 					for (int k = 0; k < 4; k++ ) {
-						sum[i][j][k] = frequence[k]; 	
+						sum[count][j][k] = frequence[k]; 	
 					} 
 					//testing...
 					System.out.println("Slave "+myRank+" frequence : " + Arrays.toString(frequence));
