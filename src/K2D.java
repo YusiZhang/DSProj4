@@ -115,6 +115,8 @@ public class K2D {
 		//calculate the nearest centroid for every point
 		int start = dataset.size() / (size-1) * (myRank - 1);
 		int end = dataset.size() / (size-1) * myRank;
+		System.out.println("start "  + start);
+		System.out.println("end " + end);
 		for (int j = start; j < end; j++){
 			pointsToIndex[j - start] = j;
 			pointsToCentroids[j - start] = getNearestCentroid(dataset.get(j));
