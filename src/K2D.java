@@ -61,6 +61,9 @@ public class K2D {
 				//send centriod to every slave
 				for (int slaveRank = 1; slaveRank < size ; slaveRank++) {
 					System.out.println("Send centroids " + Arrays.toString(centroids));
+					for(Point p : centroids){
+						System.out.println(p.getX() + "\t" + p.getY());
+					}
 					MPI.COMM_WORLD.Send(centroids, 0, numOfClusters, MPI.OBJECT, slaveRank, 99);
 				}
 			} 
@@ -152,20 +155,24 @@ public class K2D {
 		
 	}
 	private int getNearestCentroid(Point point) {
-		int index = -1;
-		int len = this.centroids.length;
+		int cluster = -1;
+//		int len = this.centroids.length;
 		double minDis = Double.MAX_VALUE;
 		double distance;
 		
-		for (int i = 0; i < len; i++) {
-			distance = Math.pow((point.getX() - centroids[i].getX()), 2)
-			+ Math.pow((point.getY() - centroids[i].getY()), 2);
+		for (int i = 0; i < numOfClusters; i++) {
+			distance = Math.pow(Math.abs(point.getX() - centroids[i].getX()), 2)
+			+ Math.pow(Math.abs(point.getY() - centroids[i].getY()), 2);
+			
+			System.out.println("minDis: " + minDis + "\t" + "dis: " + distance);
+			
 			if (distance < minDis) {
 				minDis = distance;
-				index = i;
+				cluster = i;
 			}
 		}
-		return index;
+		System.out.println("cluster: " + cluster);
+		return cluster;
 	}
 	private Point[] recalCen() {
 		Point[]	newCentroids = new Point[numOfClusters];
