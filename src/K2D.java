@@ -110,8 +110,8 @@ public class K2D {
 		return clusters;
 	}
 	private void compute() {
-		int [] pointsToCentroids = new int[dataset.size() / (size -1)];
-		int [] pointsToIndex = new int[dataset.size() / (size - 1)];
+		pointsToCentroids = new int[dataset.size() / (size -1)];
+		pointsToIndex = new int[dataset.size() / (size - 1)];
 		//calculate the nearest centroid for every point
 		int start = dataset.size() / (size-1) * (myRank - 1);
 		int end = dataset.size() / (size-1) * myRank;
@@ -125,6 +125,8 @@ public class K2D {
 		double[] ySum = new double[numOfClusters];
 
 		System.out.println("pointstocentroids: "+Arrays.toString(pointsToCentroids));
+		System.out.println("pointstoindex: "+Arrays.toString(pointsToIndex));
+		
 		for(int j = 0; j < pointsToIndex.length; j++) {
 			System.out.print("j: "+j + "\t");
 			
@@ -132,7 +134,7 @@ public class K2D {
 			System.out.print("index: "+index + "\t");
 			xSum[index] += dataset.get(pointsToIndex[j]).getX();
 			ySum[index] += dataset.get(pointsToIndex[j]).getY();
-			System.out.println("pointstoindex: "+pointsToIndex[j]);
+			
 			
 			clusterSize[index]++;
 		}
