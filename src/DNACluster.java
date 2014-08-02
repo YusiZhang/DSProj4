@@ -129,11 +129,11 @@ public class DNACluster {
 
 			
 			//test...
-			for (int i = 0; i < numCluster; i++) {
-				for (int j = 0 ; j < dnaLength; j++) {
-					System.out.println(Arrays.toString(sum[i][j]));
-				}
-			}
+//			for (int i = 0; i < numCluster; i++) {
+//				for (int j = 0 ; j < dnaLength; j++) {
+//					System.out.println(Arrays.toString(sum[i][j]));
+//				}
+//			}
 			
 			//step 6 receive for recalculate
 			MPI.COMM_WORLD.Recv(centroids, 0, numCluster, MPI.OBJECT, 0, 1);
@@ -161,6 +161,8 @@ public class DNACluster {
 				resultCluster[(myRank - 1) * numStrandsSlave + i] = cluster;
 				resultDif[(myRank - 1) * numStrandsSlave + i] = dif;
 			}
+			System.out.println(Arrays.toString(resultDif));
+			System.out.println(Arrays.toString(resultCluster));
 			//step 8 recalculating...
 			tempCluster = new String[dnaList.size()];
 			map = new HashMap<Integer,ArrayList<String>>();
