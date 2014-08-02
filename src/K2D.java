@@ -76,6 +76,10 @@ public class K2D {
 			MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.DOUBLE, MPI.SUM);
 			MPI.COMM_WORLD.Allreduce(ySum, 0, ySumNew, 0, ySum.length, MPI.DOUBLE, MPI.SUM);
 			MPI.COMM_WORLD.Allreduce(clusterSize, 0, newClusterSize, 0, clusterSize.length, MPI.INT, MPI.SUM);
+			
+			System.out.println("xSum : " + Arrays.toString(xSum));
+			System.out.println("ySum : " + Arrays.toString(ySum));
+			
 			System.out.println("xSumNew : " + Arrays.toString(xSumNew));
 			System.out.println("ySumNew : " + Arrays.toString(ySumNew));
 			System.out.println("clusterSizeNew : " + Arrays.toString(newClusterSize));
@@ -123,8 +127,8 @@ public class K2D {
 			pointsToCentroids[j - start] = getNearestCentroid(dataset.get(j));
 		}
 		
-		double[] xSum = new double[numOfClusters];
-		double[] ySum = new double[numOfClusters];
+//		xSum = new double[numOfClusters];
+//		ySum = new double[numOfClusters];
 
 		System.out.println("pointstocentroids: "+Arrays.toString(pointsToCentroids));
 		System.out.println("pointstoindex: "+Arrays.toString(pointsToIndex));
@@ -139,9 +143,9 @@ public class K2D {
 			
 			clusterSize[cluster]++;
 		}
-		System.out.println(Arrays.toString(xSum));
+		System.out.println("xSum"+Arrays.toString(xSum));
 
-		System.out.println(Arrays.toString(ySum));
+		System.out.println("ySum"+Arrays.toString(ySum));
 		
 		
 		
