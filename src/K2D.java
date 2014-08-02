@@ -170,7 +170,7 @@ public class K2D {
 	private Point[] recalCen() {
 		Point[]	newCentroids = new Point[numOfClusters];
 		for(int j = 0; j < numOfClusters; j++){
-			newCentroids[j] = new Point(xSum[j] / clusterSize[j], ySum[j]
+			newCentroids[j] = new Point(xSumNew[j] / clusterSize[j], ySumNew[j]
 					/ clusterSize[j]);
 		}
 		return newCentroids;
