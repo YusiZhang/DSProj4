@@ -81,10 +81,11 @@ public class DNA {
 //				break;
 //			}
 		}
+		
 		//assume finish...
 		if(myRank != 0){ //slave send results to master
 			System.out.println("Rank " +myRank + "send " + Arrays.toString(resultCluster));
-			MPI.COMM_WORLD.Send(resultCluster, 0, resultCluster.length, MPI.OBJECT, 0, 0);
+			MPI.COMM_WORLD.Send(resultCluster, 0, resultCluster.length, MPI.INT, 0, 0);
 		}
 		else {//master receive and glue them
 			int[] clusters = glue();
