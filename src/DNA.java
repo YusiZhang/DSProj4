@@ -69,7 +69,7 @@ public class DNA {
 					MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
 					sum[i][j] = xSum;
 					//testing...
-					System.out.println("Rank " + myRank + "xSum " + Arrays.toString(sum[i][j]));
+//					System.out.println("Rank " + myRank + "xSum " + Arrays.toString(sum[i][j]));
 				}
 			}
 			
