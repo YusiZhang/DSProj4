@@ -92,14 +92,25 @@ public class DNACluster {
 						}
 					}
 					
-					int[] xSum = frequence ,xSumNew = new int[4];
-					MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
-					System.out.println(Arrays.toString(xSumNew));
+					// int[] xSum = frequence ,xSumNew = new int[4];
+					// MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
+//					System.out.println(Arrays.toString(xSumNew));
 					for (int k = 0; k < 4; k++ ) {
-						sum[i][j][k] = xSum[k]; 	
+						sum[i][j][k] = frequence[k]; 	
 					} 
 				}
 			}
+			
+			//testing...
+			for (int i = 0; i < numCluster; i++) {
+				for (int j = 0 ; j < dnaLength; j++) {
+					for(int k = 0 ; k < 4; k++){
+						System.out.println(i + "," +j +sum[i][j][k] );
+					}
+				}
+			}
+				
+			
 			
 		}
 
