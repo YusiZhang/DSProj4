@@ -128,8 +128,7 @@ public class K2D {
 	private int[] glue() throws MPIException {
 		int [] clusters = new int[dataset.size()];
 		for(int slaveRank = 1; slaveRank < size; slaveRank++){
-//			int[] tempClusters = new int[dataset.size()];
-			int[] tempClusters = new int[dataset.size() / size];
+			int[] tempClusters = new int[dataset.size() / (size-1)];
 			MPI.COMM_WORLD.Recv(tempClusters, 0, tempClusters.length, MPI.INT,slaveRank, 0);
 			for(int i = 0 ; i < tempClusters.length;i++){
 				clusters[(slaveRank-1)*size + i] = tempClusters[i];
