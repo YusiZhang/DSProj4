@@ -118,7 +118,7 @@ public class K2D {
 			System.out.println(outFile);
 			for(int i = 0; i < dataset.size(); i++) {
 				writer.println(dataset.get(i).getX() + ","+dataset.get(i).getY() + "," + clusters[i]);
-				System.out.println(dataset.get(i) + "," + clusters[i]);
+				System.out.println(dataset.get(i).getX() + ","+dataset.get(i).getY()  + "," + clusters[i]);
 				writer.flush();
 			}
 			writer.close();
