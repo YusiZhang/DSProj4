@@ -26,7 +26,7 @@ public class DNA {
 		this.numCluster = numCluster;
 		this.outFile = outFile;
 		this.dnaList = dnaList;
-		this.numInter = 20;
+		this.numInter = 3;
 		this.centroids = new String[numCluster];
 		this.dnaLength = dnaList.get(0).length();
 		this.sum = new int [numCluster][dnaLength][4]; //cluster,dnalength,4bases
@@ -79,6 +79,7 @@ public class DNA {
 		}
 		//assume finish...
 		if(myRank != 0){ //slave send results to master
+			System.out.println("Rank " +myRank + "send " + Arrays.toString(resultCluster));
 			MPI.COMM_WORLD.Send(resultCluster, 0, resultCluster.length, MPI.OBJECT, 0, 0);
 		}
 		else {//master receive and glue them
@@ -109,10 +110,11 @@ public class DNA {
 		int [] clusters = new int[dnaList.size()];
 		for(int slaveRank = 1; slaveRank < size; slaveRank++){
 			int[] tempClusters = new int[dnaList.size()];
-			MPI.COMM_WORLD.Recv(tempClusters, 0, tempClusters.length, MPI.INT,MPI.ANY_SOURCE, 0);
+			MPI.COMM_WORLD.Recv(tempClusters, 0, tempClusters.length, MPI.INT,slaveRank, 0);
 			for(int i = 0 ; i < tempClusters.length;i++){
 				if(tempClusters[i]!=-1) clusters[i] = tempClusters[i];
 			}
+			System.out.println("receive clusters" + Arrays.toString(tempClusters)+ "from " + slaveRank);
 		}
 		return clusters;
 	}
