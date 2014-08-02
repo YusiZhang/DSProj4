@@ -124,12 +124,14 @@ public class K2D {
 		double[] xSum = new double[numOfClusters];
 		double[] ySum = new double[numOfClusters];
 
-		for(int j = 0; j < numOfClusters; j++) {
+		for(int j = 0; j < pointsToIndex.length; j++) {
 			int index = pointsToCentroids[j];
 			xSum[index] += dataset.get(pointsToIndex[j]).getX();
 			ySum[index] += dataset.get(pointsToIndex[j]).getY();
 			clusterSize[index]++;
 		}
+		
+		
 		
 	}
 	private int getNearestCentroid(Point point) {
