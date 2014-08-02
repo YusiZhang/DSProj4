@@ -267,7 +267,7 @@ public class DNACluster {
 				char [] bases = {'A','C','T','G'};
 				for(int pos = 0; pos < dnaLength; pos++){
 					List list = Arrays.asList(sum[cluster][pos]);
-					index = Collections.max(list);
+					index = (Integer)Collections.max(list);
 					newCentroid.append(bases[index]);
 				}
 				centroids[cluster] = new String(newCentroid);
