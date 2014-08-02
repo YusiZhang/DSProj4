@@ -111,14 +111,20 @@ public class DNACluster {
 			}
 				
 			//step 5 all reduce last digit for AGCT
-			for (int i = 0; i < numCluster; i++) {
-				for (int j = 0 ; j < dnaLength; j++) {
-					int [] xSum = new int[4], xSumNew = new int[4];
-					xSum = sum[i][j];
-					MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
-					sum[i][j] = xSum;
-				}
-			}
+//			for (int i = 0; i < numCluster; i++) {
+//				for (int j = 0 ; j < dnaLength; j++) {
+//					int [] xSum = new int[4], xSumNew = new int[4];
+//					xSum = sum[i][j];
+//					MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
+//					sum[i][j] = xSum;
+//				}
+//			}
+			int [] xSum = new int[4], xSumNew = new int[4];
+			xSum = sum[0][0];
+			MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
+			sum[0][0] = xSum;
+			System.out.println(Arrays.toString(sum[0][0]));
+			
 			//test...
 			for (int i = 0; i < numCluster; i++) {
 				for (int j = 0 ; j < dnaLength; j++) {
