@@ -106,8 +106,8 @@ public class DNACluster {
 		// String inFile = args[2];
 
 		int numCluster = 4;
-		String outFile = "./output/out.csv";
-		String inFile = "./input/dna.csv";
+		String outFile = "/afs/andrew.cmu.edu/usr22/yusiz/git/Proj4/output/out.csv";
+		String inFile = "/afs/andrew.cmu.edu/usr22/yusiz/git/Proj4/input/dna.csv";
 
 
 
