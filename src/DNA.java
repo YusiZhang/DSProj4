@@ -13,8 +13,8 @@ public class DNA {
 	public ArrayList<String>dnaList;
 	
 	public int numStrandsSlave;
-	public int [] resultCluster = new int[dnaList.size()];
-	public int [] resultDif = new int[dnaList.size()];
+	public int [] resultCluster;
+	public int [] resultDif ;
 	public String [] centroids;
 	public int numInter;
 	public int myRank;
@@ -30,6 +30,10 @@ public class DNA {
 		this.centroids = new String[numCluster];
 		this.dnaLength = dnaList.get(0).length();
 		this.sum = new int [numCluster][dnaLength][4]; //cluster,dnalength,4bases
+		this.resultCluster =  new int[dnaList.size()];
+		this.resultDif = new int[dnaList.size()];
+		
+		
 		
 		myRank = MPI.COMM_WORLD.Rank();
 		size = MPI.COMM_WORLD.Size();
