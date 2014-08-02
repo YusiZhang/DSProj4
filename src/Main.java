@@ -6,7 +6,7 @@ public class Main {
 		MPI.Init(args);
 		
 		//hardcode clusters numbers for testing...
-		int numClusters = 3;
+		int numClusters = 2;
 		
 //		int numClusters = Integer.parseInt(args[0]);
 		String outFile = "/afs/andrew.cmu.edu/usr22/yusiz/git/Proj4/output/out.csv";
