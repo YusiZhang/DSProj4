@@ -27,6 +27,7 @@ public class DNACluster {
 
 		//slave process
 		if (myRank != 0) {
+			System.out.println("rank: " + myRank);
 			//step 1 get centroids from master
 			String [] centroids = new String[numCluster];
 			MPI.COMM_WORLD.Recv(centroids, 0, numCluster, MPI.OBJECT, 0, 99);
@@ -102,13 +103,13 @@ public class DNACluster {
 			}
 			
 			//testing...
-			for (int i = 0; i < numCluster; i++) {
-				for (int j = 0 ; j < dnaLength; j++) {
-					for(int k = 0 ; k < 4; k++){
-						System.out.println(i + "," +j +sum[i][j][k] );
-					}
-				}
-			}
+//			for (int i = 0; i < numCluster; i++) {
+//				for (int j = 0 ; j < dnaLength; j++) {
+//					for(int k = 0 ; k < 4; k++){
+//						System.out.println(i + "," +j +sum[i][j][k] );
+//					}
+//				}
+//			}
 				
 			//step 5 all reduce last digit for AGCT
 //			for (int i = 0; i < numCluster; i++) {
@@ -122,7 +123,10 @@ public class DNACluster {
 			
 			System.out.println("Start all reduce!!!");
 			int [] xSum = new int[4], xSumNew = new int[4];
-			xSum = sum[0][0];
+//			xSum = sum[0][0];
+			for(int i = 0; i < 4 ; i++) {
+				xSum[i] = sum[0][0][i];
+			}
 			System.out.println(Arrays.toString(xSum));
 			MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
 			sum[0][0] = xSum;
