@@ -32,7 +32,7 @@ public class DNACluster {
 			MPI.COMM_WORLD.Recv(centroids, 0, numCluster, MPI.OBJECT, 0, 99);
 			
 			//step 2 calculate dif of its part
-			int numStrandsSlave = dnaList.size() / numCluster;
+			int numStrandsSlave = dnaList.size() / (size -1);
 			int [] resultCluster = new int[dnaList.size()];
 			int [] resultDif = new int[dnaList.size()];
 			for (int i = 0; i < numStrandsSlave; i++) {
