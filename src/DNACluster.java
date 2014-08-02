@@ -137,6 +137,8 @@ public class DNACluster {
 			
 			//step 6 receive for recalculate
 			MPI.COMM_WORLD.Recv(centroids, 0, numCluster, MPI.OBJECT, 0, 1);
+			System.out.println("Rank " +myRank +"receive centroids");
+			System.out.println(Arrays.toString(centroids));
 			//step 7 recalculate
 			resultCluster = new int[dnaList.size()];
 			resultDif = new int[dnaList.size()];
@@ -158,9 +160,11 @@ public class DNACluster {
 						continue;
 					}
 				}
+				
 				resultCluster[(myRank - 1) * numStrandsSlave + i] = cluster;
 				resultDif[(myRank - 1) * numStrandsSlave + i] = dif;
 			}
+			System.out.println("recalculate!!!");
 			System.out.println(Arrays.toString(resultDif));
 			System.out.println(Arrays.toString(resultCluster));
 			//step 8 recalculating...
