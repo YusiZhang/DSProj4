@@ -119,8 +119,11 @@ public class DNACluster {
 //					sum[i][j] = xSum;
 //				}
 //			}
+			
+			System.out.println("Start all reduce!!!");
 			int [] xSum = new int[4], xSumNew = new int[4];
 			xSum = sum[0][0];
+			System.out.println(xSum);
 			MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
 			sum[0][0] = xSum;
 			System.out.println(Arrays.toString(sum[0][0]));
