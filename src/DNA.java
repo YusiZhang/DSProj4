@@ -161,6 +161,8 @@ public class DNA {
 			}
 			resultCluster[(myRank - 1) * numStrandsSlave + i] = cluster;
 			resultDif[(myRank - 1) * numStrandsSlave + i] = dif;
+		}
+			
 			System.out.println(myRank+Arrays.toString(resultDif));
 			System.out.println(myRank+Arrays.toString(resultCluster));
 			
@@ -203,7 +205,7 @@ public class DNA {
 				}
 			}
 			
-		}
+		
 		
 	}
 
