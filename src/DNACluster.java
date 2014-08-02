@@ -172,9 +172,9 @@ public class DNACluster {
 					sum[i][j] = xSum;
 				}
 			}
-			int [] xSum = new int[4], xSumNew = new int[4];
-			MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
-			System.out.println(Arrays.toString(xSumNew));
+//			int [] xSum = new int[4], xSumNew = new int[4];
+//			MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
+//			System.out.println(Arrays.toString(xSumNew));
 			//step 3 send calculate new centroids to slaves
 			
 			//step 4 
