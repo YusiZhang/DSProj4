@@ -76,6 +76,10 @@ public class K2D {
 			//this is where all should work the same way...
 			//all reduce
 			System.out.println("Start all reduce!!!  " + myRank);
+			
+			xSumNew = new double [xSum.length];
+			ySumNew = new double [ySum.length];
+			
 			MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.DOUBLE, MPI.SUM);
 			MPI.COMM_WORLD.Allreduce(ySum, 0, ySumNew, 0, ySum.length, MPI.DOUBLE, MPI.SUM);
 			MPI.COMM_WORLD.Allreduce(clusterSize, 0, newClusterSize, 0, clusterSize.length, MPI.INT, MPI.SUM);
@@ -130,8 +134,9 @@ public class K2D {
 			pointsToCentroids[j - start] = getNearestCentroid(dataset.get(j));
 		}
 		
-//		xSum = new double[numOfClusters];
-//		ySum = new double[numOfClusters];
+		xSum = new double[numOfClusters];
+		ySum = new double[numOfClusters];
+		clusterSize = new int[numOfClusters];
 
 		System.out.println("pointstocentroids: "+Arrays.toString(pointsToCentroids));
 		System.out.println("pointstoindex: "+Arrays.toString(pointsToIndex));
