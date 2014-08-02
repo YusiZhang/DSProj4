@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -99,12 +102,28 @@ public class K2D {
 		
 		System.out.println("Program " + myRank + "ends");
 		if(myRank != 0) {
-			MPI.COMM_WORLD.Send(pointsToCentroids, 0, pointsToCentroids.length, MPI.INT, 0, 99);
+			MPI.COMM_WORLD.Send(pointsToCentroids, 0, pointsToCentroids.length, MPI.INT, 0, 0);
 		} else {
 			int clusters [] = glue();
-			System.out.println(Arrays.toString(clusters));
+			System.out.println("final clusters are : "+Arrays.toString(clusters));
+//			writeFile(dataset, clusters, outFile);
 		}
 		
+	}
+	private void writeFile(ArrayList<Point> dataset, int[] clusters,
+			String outFile) {
+		try {
+			PrintWriter writer = new PrintWriter(new File(outFile));
+			System.out.println(outFile);
+			for(int i = 0; i < dataset.size(); i++) {
+				writer.println(dataset.get(i) + "," + clusters[i]);
+				System.out.println(dataset.get(i) + "," + clusters[i]);
+				writer.flush();
+			}
+			writer.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	private int[] glue() throws MPIException {
 		int [] clusters = new int[dataset.size()];
@@ -116,7 +135,7 @@ public class K2D {
 				clusters[(slaveRank-1)*size + i] = tempClusters[i];
 			}
 			//testing...
-//			System.out.println("receive clusters" + Arrays.toString(tempClusters)+ "from " + slaveRank);
+			System.out.println("receive clusters" + Arrays.toString(tempClusters)+ "from " + slaveRank);
 		}
 		return clusters;
 	}
