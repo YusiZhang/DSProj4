@@ -117,10 +117,12 @@ public class K2D {
 		int end = dataset.size() / (size-1) * myRank;
 		System.out.println("start "  + start);
 		System.out.println("end " + end);
+		
 		for (int j = start; j < end; j++){
 			pointsToIndex[j - start] = j;
 			pointsToCentroids[j - start] = getNearestCentroid(dataset.get(j));
 		}
+		
 		double[] xSum = new double[numOfClusters];
 		double[] ySum = new double[numOfClusters];
 
@@ -128,16 +130,19 @@ public class K2D {
 		System.out.println("pointstoindex: "+Arrays.toString(pointsToIndex));
 		
 		for(int j = 0; j < pointsToIndex.length; j++) {
-			System.out.print("j: "+j + "\t");
 			
-			int index = pointsToCentroids[j];
-			System.out.print("index: "+index + "\t");
-			xSum[index] += dataset.get(pointsToIndex[j]).getX();
-			ySum[index] += dataset.get(pointsToIndex[j]).getY();
+			int cluster = pointsToCentroids[j];
+			System.out.print("j: \t"+j + "\t"+"cluster:\t"+cluster + "\t");
+			xSum[cluster] += dataset.get(pointsToIndex[j]).getX();
+			ySum[cluster] += dataset.get(pointsToIndex[j]).getY();
 			
 			
-			clusterSize[index]++;
+			clusterSize[cluster]++;
 		}
+		System.out.println(Arrays.toString(xSum));
+
+		System.out.println(Arrays.toString(ySum));
+		
 		
 		
 		
