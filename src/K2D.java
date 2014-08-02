@@ -25,6 +25,9 @@ public class K2D {
 	public K2D(ArrayList<Point> dataset, String output,
 			int numOfClusters) throws MPIException{
 		
+		this.myRank = MPI.COMM_WORLD.Rank();
+		this.size = MPI.COMM_WORLD.Size();
+		
 		this.numInter = 10;
 		this.numOfClusters = numOfClusters;
 		this.xSum = new double[numOfClusters];
@@ -40,8 +43,7 @@ public class K2D {
 		this.pointsToIndex = new int[dataset.size() / size];
 		
 		
-		this.myRank = MPI.COMM_WORLD.Rank();
-		this.size = MPI.COMM_WORLD.Size();
+		
 		
 		
 		System.out.println("Rank : " + myRank + "is working...");
