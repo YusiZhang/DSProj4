@@ -145,6 +145,10 @@ public class DNA {
 	}
 
 	private void compute() {
+		//init data
+		for(int i = 0 ;i < dnaList.size();i++){
+			resultCluster[i] = -1;
+		}
 		System.out.println("Rank " + myRank + " compute result:");
 		for (int i = 0; i < numStrandsSlave; i++) {
 			int dif = Integer.MAX_VALUE;
@@ -202,7 +206,7 @@ public class DNA {
 //					} 
 					//testing...
 					
-					System.out.println("Slave "+myRank+" frequence : " + count+"," + "j"+Arrays.toString(frequence));
+					System.out.println("Slave "+myRank+" frequence : " + count+"," + j +Arrays.toString(frequence));
 				}
 			}
 			
