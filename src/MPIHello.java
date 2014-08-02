@@ -27,6 +27,7 @@ public class MPIHello {
 				System.out.println("send "+ Arrays.toString(p) + " to " + i);
 			}
 			
+			
 		}
 		//slave here
 		else {
@@ -37,9 +38,9 @@ public class MPIHello {
 	
 		}
 		
-		int[]xSum = { 1, 2, 3 },xSumNew = new int[3];
-		MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
-		System.out.println(Arrays.toString(xSum));
+//		int[]xSum = { 1, 2, 3 },xSumNew = new int[3];
+//		MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
+//		System.out.println(Arrays.toString(xSum));
 
 	
 
