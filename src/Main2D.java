@@ -6,11 +6,11 @@ public class Main2D {
 		MPI.Init(args);
 		
 		//hardcode clusters numbers for testing...
-		int numClusters = 2;
+//		int numClusters = 2;
 		
-//		int numClusters = Integer.parseInt(args[0]);
+		int numClusters = Integer.parseInt(args[0]);
 		
-		String outFile2 = "../output/point_out.csv";
+		String outFile2 = "../output/point_paral.csv";
 		String inFile2 = "../input/point.csv";
 		ArrayList<Point> pointList = new ArrayList<Point>();
 		ReadCSV reader2 = new ReadCSV(inFile2, "point");

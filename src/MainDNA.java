@@ -9,7 +9,7 @@ public class MainDNA {
 //		int numClusters = 2;
 		
 		int numClusters = Integer.parseInt(args[0]);
-		String outFile = "../output/out.csv";
+		String outFile = "../output/dna_paral.csv";
 		String inFile = "../input/dna.csv";
 		ArrayList<String> dnaList = new ArrayList<String>();
 		ReadCSV reader = new ReadCSV(inFile, "dna");

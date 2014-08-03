@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -12,7 +15,7 @@ public class KMPoints_seq {
 
 	public KMPoints_seq(int numCluster, String inputFile, String outputFile)
 			throws Exception {
-		int iterations = 10;
+		int iterations = 500;
 
 		ReadCSV reader = new ReadCSV(inputFile, "point");
 		ArrayList<Point> dataset = reader.read();
@@ -28,9 +31,9 @@ public class KMPoints_seq {
 
 		for (int i = 0; i < iterations && !close; i++) {
 			
-			System.out.println("round "+i);
+			//System.out.println("round "+i);
 			for (Point p : centroids) {
-				System.out.println(p.getX() + " " + p.getY());
+				//System.out.println(p.getX() + " " + p.getY());
 			}
 			for (int j = 0; j < dataset.size(); j++) {
 				point2Centroid[j] = getNearestCentroid(dataset.get(j));
@@ -57,20 +60,25 @@ public class KMPoints_seq {
 				else newCentroids[j] = new Point(xSum[j] / clusterSize[j], ySum[j]
 						/ clusterSize[j]);
 			}
-			System.out.println("new cen");
+			//System.out.println("new cen");
 			for (Point p : newCentroids) {
-				System.out.println(p.getX() + " " + p.getY());
+				//System.out.println(p.getX() + " " + p.getY());
 			}
-			// System.out.println();
-			calculateDifference(centroids, newCentroids);
-			if (close) {
-				break;
-			} else {
-				for (int j = 0; j < numCluster; j++) {
-					centroids[j] = newCentroids[j];
-				}
+			// //System.out.println();
+//			calculateDifference(centroids, newCentroids);
+//			if (close) {
+//				writeFile(dataset,point2Centroid,outputFile);
+//				break;
+//			} else {
+//				for (int j = 0; j < numCluster; j++) {
+//					centroids[j] = newCentroids[j];
+//				}
+//			}
+			for (int j = 0; j < numCluster; j++) {
+				centroids[j] = newCentroids[j];
 			}
 		}
+		writeFile(dataset,point2Centroid,outputFile);
 	}
 
 	public int getNearestCentroid(Point p) {
@@ -112,16 +120,34 @@ public class KMPoints_seq {
 	}
 
 	public static void main(String[] args) throws Exception {
-		if (args.length != 3) {
-			System.out.println("You should give following args");
+		System.out.println("Start...");
+		if (args.length != 1) {
+			//System.out.println("You should give following args");
 			System.out
 					.println("arg0 : numCluster | arg1: outFile | arg2 : inFile");
 		}
 		//		
 		int numCluster = Integer.parseInt(args[0]);
-		String outFile = args[1];
-		String inFile = args[2];
+		String outFile = "../output/point_seq.csv";
+		String inFile = "../input/point.csv";
 		// //read data from file
 		new KMPoints_seq(numCluster, inFile, outFile);
+		System.out.println("Check out ../output/point_seq.csv for result!!");
+	}
+	
+	private void writeFile(ArrayList<Point> dataset, int[] clusters,
+			String outFile) {
+		try {
+			PrintWriter writer = new PrintWriter(new File(outFile));
+			//System.out.println(outFile);
+			for(int i = 0; i < dataset.size(); i++) {
+				writer.println(dataset.get(i).getX() + ","+dataset.get(i).getY() + "," + clusters[i]);
+				//System.out.println(dataset.get(i).getX() + ","+dataset.get(i).getY()  + "," + clusters[i]);
+				writer.flush();
+			}
+			writer.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 }

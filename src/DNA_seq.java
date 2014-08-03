@@ -31,25 +31,27 @@ public class DNA_seq {
 		/*
 		 * arg0 : numCluster arg1 : outFile arg2 : inFile
 		 */
-		if (args.length != 3) {
+		if (args.length != 1) {
 			System.out.println("You should give following args");
 			System.out
 					.println("arg0 : numCluster | arg1: outFile | arg2 : inFile");
 		}
 
-		// int numCluster = Integer.parseInt(args[0]);
+		 int numCluster = Integer.parseInt(args[0]);
 		// String outFile = args[1];
 		// String inFile = args[2];
 
-		int numCluster = 4;
-		String outFile = "./output/out.csv";
-		String inFile = "./input/dna.csv";
+//		int numCluster = 4;
+		String outFile = "../output/dna_seq.csv";
+		String inFile = "../input/dna.csv";
 
+		
 		ReadCSV reader = new ReadCSV(inFile, "dna");
-
+		System.out.println("DNA_seq Start....");
+		
 		try {
 			ArrayList<String> dnaList = reader.read();
-			System.out.println(dnaList.size());
+//			System.out.println(dnaList.size());
 			// step1 select init centroids randomly from dnaList
 			ArrayList<Integer> randomPool = generateRandom(numCluster,
 					dnaList.size());
@@ -64,9 +66,9 @@ public class DNA_seq {
 				}
 			}
 			// test
-			System.out.println(Arrays.toString(centroids));
+//			System.out.println(Arrays.toString(centroids));
 
-			for (int count = 0; count < 5; count++) {
+			for (int count = 0; count < 500; count++) {
 				// calculate dif of each dna strand
 
 				// step2 calculate dif of each dna strand
@@ -89,8 +91,8 @@ public class DNA_seq {
 					resultDif[i] = dif;
 				}
 
-				System.out.println(Arrays.toString(resultDif));
-				System.out.println(Arrays.toString(resultCluster));
+//				System.out.println(Arrays.toString(resultDif));
+//				System.out.println(Arrays.toString(resultCluster));
 
 				// step 3 recalculate centriod
 				String[] tempCluster = new String[dnaList.size()];
@@ -111,7 +113,7 @@ public class DNA_seq {
 				}// now we have new centroids
 
 				// test
-				System.out.println(Arrays.toString(newCentroids));
+//				System.out.println(Arrays.toString(newCentroids));
 
 				// step 4 recalcualte cluster
 				// can be while loop...
@@ -134,11 +136,12 @@ public class DNA_seq {
 					resultDif2[i] = dif;
 				}
 
-				System.out.println(Arrays.toString(resultDif2));
-				System.out.println(Arrays.toString(resultCluster2));
+//				System.out.println(Arrays.toString(resultDif2));
+//				System.out.println(Arrays.toString(resultCluster2));
 
-				if (count == 4) {
+				if (count == 499) {
 					writeFile(dnaList, resultCluster2, outFile);
+					
 				}
 
 			}
@@ -147,6 +150,8 @@ public class DNA_seq {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		System.out.println("DNA_seq Finish....Check ./output/dna_seq.csv for result");
 	}
 
 	// Generate numCluster ints within range of 0 to listSize
@@ -243,7 +248,7 @@ public class DNA_seq {
 			System.out.println(outFile);
 			for (int i = 0; i < dnaList.size(); i++) {
 				writer.println(dnaList.get(i) + "," + clusters[i]);
-				System.out.println(dnaList.get(i) + "," + clusters[i]);
+//				System.out.println(dnaList.get(i) + "," + clusters[i]);
 				writer.flush();
 			}
 			writer.close();
