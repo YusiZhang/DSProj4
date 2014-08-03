@@ -11,6 +11,7 @@ import java.util.Random;
 
 import mpi.*;
 
+
 //tag 99 : send centroids
 //tag 1 : send new centroids
 //tag0 : final result
