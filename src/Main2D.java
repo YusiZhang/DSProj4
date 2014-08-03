@@ -15,7 +15,7 @@ public class Main2D {
 		ArrayList<Point> pointList = new ArrayList<Point>();
 		ReadCSV reader2 = new ReadCSV(inFile2, "point");
 		pointList = reader2.read();
-		new K2D(pointList, outFile2, numClusters);
+		new KMPoints_paral(pointList, outFile2, numClusters);
 			
 
 		

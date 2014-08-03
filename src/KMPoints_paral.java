@@ -7,7 +7,7 @@ import java.util.Random;
 
 import mpi.*;
 
-public class K2D {
+public class KMPoints_paral {
 	public String outFile;
 	public ArrayList<Point>dataset;
 	public double[] xSum;
@@ -25,7 +25,7 @@ public class K2D {
 	public int [] pointsToCentroids;
 	public int [] pointsToIndex;
 	
-	public K2D(ArrayList<Point> dataset, String output,
+	public KMPoints_paral(ArrayList<Point> dataset, String output,
 			int numOfClusters) throws MPIException{
 		
 		this.myRank = MPI.COMM_WORLD.Rank();

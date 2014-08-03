@@ -16,8 +16,8 @@ public class MainDNA {
 		
 		
 		dnaList = reader.read();
-		new DNACluster(numClusters, outFile, dnaList);
-		new DNA(numClusters, outFile, dnaList);
+		new DNA_seq(numClusters, outFile, dnaList);
+		new DNA_paral(numClusters, outFile, dnaList);
 		
 		
 		

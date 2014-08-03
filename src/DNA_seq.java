@@ -15,12 +15,12 @@ import mpi.*;
 //tag 99 : send centroids
 //tag 1 : send new centroids
 //tag0 : final result
-public class DNACluster {
+public class DNA_seq {
 	public String outFile;
 	public int numCluster;
 	public ArrayList<String> dnaList;
 
-	public DNACluster(int numCluster, String outFile, ArrayList<String> dnaList)
+	public DNA_seq(int numCluster, String outFile, ArrayList<String> dnaList)
 			throws MPIException {
 
 	}

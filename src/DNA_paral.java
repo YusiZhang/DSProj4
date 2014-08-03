@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import mpi.*;
-public class DNA {
+public class DNA_paral {
 	public String outFile;
 	public int numCluster;
 	public ArrayList<String>dnaList;
@@ -22,7 +22,7 @@ public class DNA {
 	public int dnaLength;
 	public int [][][] sum;
 	public HashMap<Integer,ArrayList<String>> map; //for computing...
-	public DNA(int numCluster, String outFile, ArrayList<String> dnaList) throws MPIException{
+	public DNA_paral(int numCluster, String outFile, ArrayList<String> dnaList) throws MPIException{
 		this.numCluster = numCluster;
 		this.outFile = outFile;
 		this.dnaList = dnaList;
