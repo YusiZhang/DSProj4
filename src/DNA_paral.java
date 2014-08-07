@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import mpi.*;
-public class DNA {
+public class DNA_paral {
 	public String outFile;
 	public int numCluster;
 	public ArrayList<String>dnaList;
@@ -22,11 +22,14 @@ public class DNA {
 	public int dnaLength;
 	public int [][][] sum;
 	public HashMap<Integer,ArrayList<String>> map; //for computing...
-	public DNA(int numCluster, String outFile, ArrayList<String> dnaList) throws MPIException{
+	public DNA_paral(int numCluster, String outFile, ArrayList<String> dnaList) throws MPIException{
+		
+		System.out.println("Rank "+myRank+" Start...");
+		
 		this.numCluster = numCluster;
 		this.outFile = outFile;
 		this.dnaList = dnaList;
-		this.numInter = 2;
+		this.numInter = 500;
 		this.centroids = new String[numCluster];
 		this.dnaLength = dnaList.get(0).length();
 		this.sum = new int [numCluster][dnaLength][4]; //cluster,dnalength,4bases
@@ -39,18 +42,18 @@ public class DNA {
 		this.size = MPI.COMM_WORLD.Size();
 		this.numStrandsSlave = dnaList.size() / (size -1);
 		
-		System.out.println("Rank : " + myRank + "is working...");
+		//System.out.println("Rank : " + myRank + "is working...");
 		for(int start = 0; start <numInter; start++){
 			
 			if(myRank == 0) {
 				if(start==0) centroids = initCentroids(); //first time
 				else {//master cal new centroids
-					System.out.println("round " + start);
+					//System.out.println("round " + start);
 					centroids = recalCen();
 				}
 				//send centriod to every slave
 				for (int slaveRank = 1; slaveRank < size ; slaveRank++) {
-					System.out.println("Send centroids " + Arrays.toString(centroids));
+					//System.out.println("Send centroids " + Arrays.toString(centroids));
 					MPI.COMM_WORLD.Send(centroids, 0, numCluster, MPI.OBJECT, slaveRank, 99);
 				}
 			}
@@ -62,7 +65,7 @@ public class DNA {
 			
 			//this is where all should work the same way...
 			//all reduce
-			System.out.println("Start all reduce!!!  " + myRank);
+			//System.out.println("Start all reduce!!!  " + myRank);
 			for (int i = 0; i < numCluster; i++) {
 				for (int j = 0 ; j < dnaLength; j++) {
 					int [] xSum = new int[4], xSumNew = new int[4];
@@ -71,8 +74,8 @@ public class DNA {
 					MPI.COMM_WORLD.Allreduce(xSum, 0, xSumNew, 0, xSum.length, MPI.INT, MPI.SUM);
 					sum[i][j] = xSumNew;
 					//testing...
-					System.out.println("Rank " + myRank + " sum[i][j] " + Arrays.toString(sum[i][j]));
-//					System.out.println("Rank " + myRank + " xSumNew " + Arrays.toString(xSumNew));
+					//System.out.println("Rank " + myRank + " sum[i][j] " + Arrays.toString(sum[i][j]));
+//					//System.out.println("Rank " + myRank + " xSumNew " + Arrays.toString(xSumNew));
 				}
 			}
 			
@@ -84,14 +87,16 @@ public class DNA {
 		
 		//assume finish...
 		if(myRank != 0){ //slave send results to master
-			System.out.println("Rank " +myRank + "send " + Arrays.toString(resultCluster));
+			//System.out.println("Rank " +myRank + "send " + Arrays.toString(resultCluster));
 			MPI.COMM_WORLD.Send(resultCluster, 0, resultCluster.length, MPI.INT, 0, 0);
 		}
 		else {//master receive and glue them
 			int[] clusters = glue();
 			writeFile(dnaList, clusters, outFile);
+			System.out.println("Finish...");
+			System.out.println("Check out ./output/dna_paral.csv for result");
 		}
-		System.out.println("Program ends");
+		//System.out.println("Program ends");
 		//writeFile(dnaList, clusters, outFile);
 		
 	}
@@ -99,10 +104,10 @@ public class DNA {
 	private void writeFile(ArrayList<String> dnaList, int[] clusters,String outFile) {
 		try {
 			PrintWriter writer = new PrintWriter(new File(outFile));
-			System.out.println(outFile);
+			//System.out.println(outFile);
 			for(int i = 0; i < dnaList.size(); i++) {
 				writer.println(dnaList.get(i) + "," + clusters[i]);
-				System.out.println(dnaList.get(i) + "," + clusters[i]);
+				//System.out.println(dnaList.get(i) + "," + clusters[i]);
 				writer.flush();
 			}
 			writer.close();
@@ -120,7 +125,7 @@ public class DNA {
 				if(tempClusters[i]!=-1) clusters[i] = tempClusters[i];
 			}
 			//testing...
-//			System.out.println("receive clusters" + Arrays.toString(tempClusters)+ "from " + slaveRank);
+//			//System.out.println("receive clusters" + Arrays.toString(tempClusters)+ "from " + slaveRank);
 		}
 		return clusters;
 	}
@@ -144,7 +149,7 @@ public class DNA {
 			}
 			centroids[cluster] = new String(newCentroid);
 		}
-		System.out.println("Master cal new centroids " + Arrays.toString(centroids));
+		//System.out.println("Master cal new centroids " + Arrays.toString(centroids));
 		return centroids;
 	}
 
@@ -153,7 +158,7 @@ public class DNA {
 		for(int i = 0 ;i < dnaList.size();i++){
 			resultCluster[i] = -1;
 		}
-		System.out.println("Rank " + myRank + " compute result:");
+		//System.out.println("Rank " + myRank + " compute result:");
 		for (int i = 0; i < numStrandsSlave; i++) {
 			int dif = Integer.MAX_VALUE;
 			int cluster = -1;
@@ -171,8 +176,8 @@ public class DNA {
 			resultDif[(myRank - 1) * numStrandsSlave + i] = dif;
 		}
 			
-			System.out.println(myRank+Arrays.toString(resultDif));
-			System.out.println(myRank+Arrays.toString(resultCluster));
+			//System.out.println(myRank+Arrays.toString(resultDif));
+			//System.out.println(myRank+Arrays.toString(resultCluster));
 			
 			String[] tempCluster = new String[dnaList.size()];
 			map = new HashMap<Integer,ArrayList<String>>();
@@ -180,7 +185,21 @@ public class DNA {
 				map.put(count,new ArrayList<String>());
 			}
 			for (int count = 0; count < numStrandsSlave; count++) {
-				map.get(resultCluster[count]).add(dnaList.get((myRank - 1) * numStrandsSlave + count));
+//				if(dnaList.get(((myRank - 1) * numStrandsSlave + count)% dnaList.size() ) == null) {
+//					System.out.println("dnaList.get(((myRank - 1) * numStrandsSlave + count)% dnaList.size() ) is null" );
+//				}
+//				if(map.get(resultCluster[count]) == null){
+//					System.out.println(resultCluster[count]);
+//					System.out.println("map.get(resultCluster[count]) == null");
+//				}
+				if(resultCluster[count] == -1){
+					continue;
+				}else {
+					map.get(resultCluster[count]).add(dnaList.get(((myRank - 1) * numStrandsSlave + count) ) );
+				}
+				
+				
+				
 			}//now we have arraylists of each cluster
 			
 			for (int count = 0; count < numCluster; count++) {
@@ -210,7 +229,7 @@ public class DNA {
 //					} 
 					//testing...
 					
-					System.out.println("Slave "+myRank+" frequence : " + count+"," + j +Arrays.toString(frequence));
+					//System.out.println("Slave "+myRank+" frequence : " + count+"," + j +Arrays.toString(frequence));
 				}
 			}
 			

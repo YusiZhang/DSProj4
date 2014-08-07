@@ -94,7 +94,7 @@ for i in range(0, numClusters):
         centroid_dna_tmp = generateDNAcentroid(length)
     #print centroid_dna_tmp
     centroids_dna.append(centroid_dna_tmp)
-    print centroids_dna
+    #print centroids_dna
 
 
 # step 2 generate the DNA strands for each centroid
@@ -107,7 +107,7 @@ for i in range(0, numClusters):
     cluster = centroids_dna[i]
     for j in range(0, numDNA):
         tmp = generateDNA(cluster, variance)
-        print tmp
+#        print tmp
         writer.write(tmp)
         writer.write('\n')
 

@@ -7,7 +7,7 @@ import java.util.Random;
 
 import mpi.*;
 
-public class K2D {
+public class KMPoints_paral {
 	public String outFile;
 	public ArrayList<Point>dataset;
 	public double[] xSum;
@@ -25,13 +25,15 @@ public class K2D {
 	public int [] pointsToCentroids;
 	public int [] pointsToIndex;
 	
-	public K2D(ArrayList<Point> dataset, String output,
+	public KMPoints_paral(ArrayList<Point> dataset, String output,
 			int numOfClusters) throws MPIException{
+		
+//		System.out.println("Rank "+myRank+" Start...");
 		
 		this.myRank = MPI.COMM_WORLD.Rank();
 		this.size = MPI.COMM_WORLD.Size();
 		
-		this.numInter = 10;
+		this.numInter = 500;
 		this.numOfClusters = numOfClusters;
 		this.xSum = new double[numOfClusters];
 		this.ySum = new double[numOfClusters];
@@ -50,7 +52,7 @@ public class K2D {
 		
 		
 		
-		System.out.println("Rank : " + myRank + "is working...");
+		//System.out.println("Rank : " + myRank + "is working...");
 		
 		for(int start = 0; start < numInter; start++ ){
 			
@@ -64,9 +66,9 @@ public class K2D {
 				
 				//send centriod to every slave
 				for (int slaveRank = 1; slaveRank < size ; slaveRank++) {
-					System.out.println("Send centroids " + Arrays.toString(centroids));
+					//System.out.println("Send centroids " + Arrays.toString(centroids));
 					for(Point p : centroids){
-						System.out.println(p.getX() + "\t" + p.getY());
+						//System.out.println(p.getX() + "\t" + p.getY());
 					}
 					MPI.COMM_WORLD.Send(centroids, 0, numOfClusters, MPI.OBJECT, slaveRank, 99);
 				}
@@ -79,7 +81,7 @@ public class K2D {
 			}
 			//this is where all should work the same way...
 			//all reduce
-			System.out.println("Start all reduce!!!  " + myRank);
+			//System.out.println("Start all reduce!!!  " + myRank);
 			
 			xSumNew = new double [xSum.length];
 			ySumNew = new double [ySum.length];
@@ -88,12 +90,12 @@ public class K2D {
 			MPI.COMM_WORLD.Allreduce(ySum, 0, ySumNew, 0, ySum.length, MPI.DOUBLE, MPI.SUM);
 			MPI.COMM_WORLD.Allreduce(clusterSize, 0, newClusterSize, 0, clusterSize.length, MPI.INT, MPI.SUM);
 			
-			System.out.println("xSum : " + Arrays.toString(xSum));
-			System.out.println("ySum : " + Arrays.toString(ySum));
+			//System.out.println("xSum : " + Arrays.toString(xSum));
+			//System.out.println("ySum : " + Arrays.toString(ySum));
 			
-			System.out.println("xSumNew : " + Arrays.toString(xSumNew));
-			System.out.println("ySumNew : " + Arrays.toString(ySumNew));
-			System.out.println("clusterSizeNew : " + Arrays.toString(newClusterSize));
+			//System.out.println("xSumNew : " + Arrays.toString(xSumNew));
+			//System.out.println("ySumNew : " + Arrays.toString(ySumNew));
+			//System.out.println("clusterSizeNew : " + Arrays.toString(newClusterSize));
 			
 			//calculate the difference between the old centroids and the new centroids
 			//..........
@@ -101,24 +103,26 @@ public class K2D {
 		
 		//finish...
 		
-		System.out.println("Program " + myRank + "ends");
+		//System.out.println("Program " + myRank + "ends");
 		if(myRank != 0) {
 			MPI.COMM_WORLD.Send(pointsToCentroids, 0, pointsToCentroids.length, MPI.INT, 0, 0);
 		} else {
 			int clusters [] = glue();
-			System.out.println("final clusters are : "+Arrays.toString(clusters));
+			//System.out.println("final clusters are : "+Arrays.toString(clusters));
 			writeFile(dataset, clusters, outFile);
+			System.out.println("Checkout ../output/point_paral.csv for result");
 		}
+		
 		
 	}
 	private void writeFile(ArrayList<Point> dataset, int[] clusters,
 			String outFile) {
 		try {
 			PrintWriter writer = new PrintWriter(new File(outFile));
-			System.out.println(outFile);
+			//System.out.println(outFile);
 			for(int i = 0; i < dataset.size(); i++) {
 				writer.println(dataset.get(i).getX() + ","+dataset.get(i).getY() + "," + clusters[i]);
-				System.out.println(dataset.get(i).getX() + ","+dataset.get(i).getY()  + "," + clusters[i]);
+				//System.out.println(dataset.get(i).getX() + ","+dataset.get(i).getY()  + "," + clusters[i]);
 				writer.flush();
 			}
 			writer.close();
@@ -135,7 +139,7 @@ public class K2D {
 				clusters[(slaveRank-1)*size + i] = tempClusters[i];
 			}
 			//testing...
-			System.out.println("receive clusters" + Arrays.toString(tempClusters)+ "from " + slaveRank);
+			//System.out.println("receive clusters" + Arrays.toString(tempClusters)+ "from " + slaveRank);
 		}
 		return clusters;
 	}
@@ -145,8 +149,8 @@ public class K2D {
 		//calculate the nearest centroid for every point
 		int start = dataset.size() / (size-1) * (myRank - 1);
 		int end = dataset.size() / (size-1) * myRank;
-		System.out.println("start "  + start);
-		System.out.println("end " + end);
+		//System.out.println("start "  + start);
+		//System.out.println("end " + end);
 		
 		for (int j = start; j < end; j++){
 			pointsToIndex[j - start] = j;
@@ -157,22 +161,22 @@ public class K2D {
 		ySum = new double[numOfClusters];
 		clusterSize = new int[numOfClusters];
 
-		System.out.println("pointstocentroids: "+Arrays.toString(pointsToCentroids));
-		System.out.println("pointstoindex: "+Arrays.toString(pointsToIndex));
+		//System.out.println("pointstocentroids: "+Arrays.toString(pointsToCentroids));
+		//System.out.println("pointstoindex: "+Arrays.toString(pointsToIndex));
 		
 		for(int j = 0; j < pointsToIndex.length; j++) {
 			
 			int cluster = pointsToCentroids[j];
-			System.out.print("j: \t"+j + "\t"+"cluster:\t"+cluster + "\t");
+			//System.out.print("j: \t"+j + "\t"+"cluster:\t"+cluster + "\t");
 			xSum[cluster] += dataset.get(pointsToIndex[j]).getX();
 			ySum[cluster] += dataset.get(pointsToIndex[j]).getY();
 			
 			
 			clusterSize[cluster]++;
 		}
-		System.out.println("xSum"+Arrays.toString(xSum));
+		//System.out.println("xSum"+Arrays.toString(xSum));
 
-		System.out.println("ySum"+Arrays.toString(ySum));
+		//System.out.println("ySum"+Arrays.toString(ySum));
 		
 		
 		
@@ -188,14 +192,14 @@ public class K2D {
 			distance = Math.pow(Math.abs(point.getX() - centroids[i].getX()), 2)
 			+ Math.pow(Math.abs(point.getY() - centroids[i].getY()), 2);
 			
-			System.out.println("minDis: " + minDis + "\t" + "dis: " + distance);
+			//System.out.println("minDis: " + minDis + "\t" + "dis: " + distance);
 			
 			if (distance < minDis) {
 				minDis = distance;
 				cluster = i;
 			}
 		}
-		System.out.println("cluster: " + cluster);
+		//System.out.println("cluster: " + cluster);
 		return cluster;
 	}
 	private Point[] recalCen() {
