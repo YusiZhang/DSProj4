@@ -7,7 +7,7 @@ Complie java files using sh build.sh at root dir.
 
 Run Sequential DNA program:
 
-sh run_dna_seq.sh
+'sh run_dna_seq.sh'
 
 Run MPI-based DNA program:
 
